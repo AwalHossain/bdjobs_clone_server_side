@@ -7,7 +7,7 @@ class Apifeature {
   search() {
     const keyword = this.queryStr.keyword
       ? {
-          name: {
+          jobTitle: {
             $regex: this.queryStr.keyword,
             $options: "i",
           },

@@ -19,6 +19,10 @@ const dotenv = require("dotenv");
 // const connectDB = require("./config/database");
 dotenv.config();
 
+// app.get("/", (req, res) => {
+//   res.json("it's working");
+// });
+
 const userRoute = require("./routes/user");
 const jobsRoute = require("./routes/jobs");
 

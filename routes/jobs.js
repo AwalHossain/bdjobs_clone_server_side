@@ -1,4 +1,6 @@
 const router = require("express").Router();
+// const ApiFeatures = require("../utils/apifeatures");
+const ApiFeatures = require("../utils/apifeature");
 
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Jobs = require("../model/jobModel");
@@ -31,5 +33,30 @@ router.get(
     });
   })
 );
+
+router.get(
+  "/jobs",
+  catchAsyncErrors(async (req, res, next) => {
+    const resultPerPage = 10;
+    const apiFeature = new ApiFeatures(Jobs.find(), req.query)
+      .search()
+      .filter();
+
+    let allJobs = await apiFeature.query;
+    let filteredProductsCount = allJobs.lengt;
+    apiFeature.pagination(10);
+
+    allJobs = await apiFeature.query;
+
+    res.status(200).json({
+      success: true,
+      allJobs,
+      resultPerPage,
+      filteredProductsCount,
+    });
+  })
+);
+
+// job Search by keyword
 
 module.exports = router;
