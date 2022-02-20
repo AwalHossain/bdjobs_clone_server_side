@@ -78,13 +78,11 @@ router.get(
   })
 );
 // Get User by Email
-router.post(
-  "/jobSeeker/email",
+router.get(
+  "/jobSeeker/findbyemail/:email",
   catchAsyncErrors(async (req, res, next) => {
-    console.log(req.body, "way");
-    const { email } = req.body;
-    console.log(email);
-    const user = await User.find({ email });
+    const mail = req.params.email;
+    const user = await User.findOne({ email: mail });
     console.log("heloa", user);
 
     res.status(200).json({
@@ -163,13 +161,12 @@ router.get(
   })
 );
 // Get Employer by Email
-router.post(
-  "/employer/email",
+router.get(
+  "/employer/findbyemail/:email",
   catchAsyncErrors(async (req, res, next) => {
-    console.log(req.body, "way");
-    const { email } = req.body;
-    console.log(email);
-    const user = await Employer.find({ email });
+    const mail = req.params.email;
+    // console.log(email);
+    const user = await Employer.findOne({ email: mail });
     console.log("heloa", user);
 
     res.status(200).json({
