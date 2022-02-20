@@ -34,6 +34,8 @@ router.get(
   })
 );
 
+// job Search by keyword filter
+
 router.get(
   "/jobs",
   catchAsyncErrors(async (req, res, next) => {
@@ -57,6 +59,18 @@ router.get(
   })
 );
 
-// job Search by keyword
+// Get all the job
+
+router.get(
+  "/getAll/jobs",
+  catchAsyncErrors(async (req, res, next) => {
+    const getAllJobs = await Jobs.find();
+
+    res.status(200).json({
+      success: true,
+      getAllJobs,
+    });
+  })
+);
 
 module.exports = router;
