@@ -77,13 +77,13 @@ router.get(
 router.get(
   "/getAll/category",
   catchAsyncErrors(async (req, res, next) => {
-    const getAllJobs = await Jobs.find({}).distinct("jobCategory");
+    const getAllCategory = await Jobs.find({}).distinct("jobCategory");
 
     // await getAllJobs.validate();
 
     res.status(200).json({
       success: true,
-      getAllJobs,
+      getAllCategory,
     });
   })
 );
