@@ -16,7 +16,7 @@ const ErrorHandler = require("./utils/errorHandler");
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000"],
+    origin: ["https://cryptic-retreat-93579.herokuapp.com/"],
   })
 );
 
