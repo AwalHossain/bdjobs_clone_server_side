@@ -14,10 +14,7 @@ const jwt = require("jsonwebtoken");
 const ErrorHandler = require("./utils/errorHandler");
 
 app.use(
-  cors({
-    credentials: true,
-    origin: ["https://cryptic-retreat-93579.herokuapp.com/"],
-  })
+  cors()
 );
 
 app.use(express.json());
