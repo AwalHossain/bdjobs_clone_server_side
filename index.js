@@ -9,8 +9,17 @@ const cloudinary = require("cloudinary");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const { MongoClient, ServerApiVersion } = require("mongodb");
+const User = require("./model/usersModel");
+const jwt = require("jsonwebtoken");
+const ErrorHandler = require("./utils/errorHandler");
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000"],
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -19,20 +28,24 @@ const dotenv = require("dotenv");
 // const connectDB = require("./config/database");
 dotenv.config();
 
-// app.get("/", (req, res) => {
-//   res.json("it's working");
-// });
-
 const userRoute = require("./routes/user");
 const jobsRoute = require("./routes/jobs");
+const usersModel = require("./model/usersModel");
+const catchAsyncErrors = require("./middleware/catchAsyncErrors");
 
 app.use("/api", userRoute);
 app.use("/api", jobsRoute);
 
 // mongodb
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then((data) => console.log(`Mongodb is connected  `));
+mongoose.connect(process.env.MONGODB_URI, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useCreateIndex: true
+}
+)
+.then(res=>console.log("MongDb connected") );
+
+
 
 //Handle Uncaught error
 
@@ -51,6 +64,31 @@ app.get("/", (req, res) => {
 
 // Middleware for Error
 app.use(errorMiddleware);
+
+// app.get(
+//   "/get/me",
+//   catchAsyncErrors(async (req, res, next) => {
+//     console.log(access_token, " this is access token");
+//     const access_token = req.cookies;
+//     if (!access_token) {
+//       return next(
+//         new ErrorHandler("Please Login to access this resource", 401)
+//       );
+//     }
+
+//     const decodedData = jwt.verify(access_token, process.env.JWT_SECRET);
+
+//     req.user = await User.findById(decodedData.id);
+//     // console.log(req.user, "way");
+//     const user = await User.findById(req.user.id);
+//     console.log("heloa", user);
+
+//     res.status(200).json({
+//       success: true,
+//       user,
+//     });
+//   })
+// );
 
 const server = app.listen(port, () => {
   console.log(`This server is running on ${port}`);

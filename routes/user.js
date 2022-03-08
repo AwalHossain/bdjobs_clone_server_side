@@ -7,6 +7,7 @@ const sendToken = require("../utils/jwtToken");
 const { isAuthenticatedUser, authrizeRoles } = require("../middleware/auth");
 const sendEmail = require("../middleware/sendEmail");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 // const jobSeeker = require("");
 
 // Job Seeker Registration & Login
@@ -49,19 +50,30 @@ router.post(
 );
 
 //// Get user details
-router.get(
-  "/jobSeeker/me",
-  catchAsyncErrors(async (req, res, next) => {
-    console.log(req.user, "way");
-    const user = await User.findById(req.user.id);
-    console.log("heloa", user);
+router.get("/getCookie", async (req, res, next) => {
+  const { access_token } = req.cookies;
+  console.log(access_token, " this is access token");
+  if (!access_token) {
+    return next(new ErrorHandler("Please Login to access this resource", 401));
+  }
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
-  })
-);
+  const decodedData = jwt.verify(access_token, process.env.JWT_SECRET);
+  console.log(decodedData.id);
+  req.user = (decodedData.id);
+  console.log(req.user, "way");
+  const id = req.user;
+  let user = await User.findById({_id: id});
+  if(user === null){
+    user = await Employer.findById({_id: id});
+  }
+  console.log("heloa", user);
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
 
 // Get User by id
 router.get(
